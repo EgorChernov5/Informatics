@@ -1,0 +1,15 @@
+#! /bin/bash
+#up/down
+
+#перебор переданных хостов
+for i in $@
+do
+	#вывод содержимого в STDOUT, а ошибки в черную дыру
+	ping -c 1 $i > $1 2> /dev/null
+	#проверка ICMP
+	if grep "1 received" $1 > /dev/null; then
+		echo "HOST IS UP"
+	else
+		echo "HOST IS DOWN"
+	fi
+done

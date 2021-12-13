@@ -1,0 +1,72 @@
+#!/bin/bash
+
+export LANG=en_US.UTF-8
+
+count_file=0
+count_dir=0
+probel=$'\u00a0'
+
+f() {
+	local path=$1 #родительская дир
+	local prefix=$2 #отступы
+	local files=( $(ls $path) ) #массив файлов
+	local leng=${#files[@]} #количество файлов в массиве
+
+	leng=$(( $leng-1 ))
+	
+	#проверка наличия файлов
+	if [[ $leng -ne -1 ]]; then
+		local last=${files[$leng]} #последний файл
+		for file in ${files[@]}
+		do
+			#проверка на закрытие префикса
+			if [[ $file == $last ]]; then
+				echo "$prefix└── $file"
+				#проверка файла на дир
+				if [[ -d $path/$file ]]; then
+					count_dir=$(( $count_dir+1 ))
+					f "$path/$file" "$prefix    "
+				else
+					count_file=$(( $count_file+1 ))
+				fi
+			else
+				echo "$prefix├── $file"
+				#проверка файла на дир
+				if [[ -d $path/$file ]]; then
+					count_dir=$(( $count_dir+1 ))
+					f "$path/$file" "$prefix│$probel$probel "
+				else
+					count_file=$(( $count_file+1 ))
+				fi
+			fi
+		done
+	fi
+}
+
+#преобразования
+way=$1
+
+if [[ $way = "" ]]; then
+	way="."
+fi
+
+#вывод дерева
+echo "$way"
+f "$way" ""
+echo ""
+
+#преобразования
+if [[ $ndir -eq 1 ]]; then
+	dir=directory
+else
+	dir=directories
+fi
+
+if [[ $nfile -eq 1 ]]; then
+	file=file
+else
+	file=files
+fi
+
+#вывод счетчика
+echo "$count_dir $dir, $count_file $file"

@@ -1,0 +1,38 @@
+#!/bin/bash
+
+a=$1
+b=$2
+
+if [[ $b -eq 0 ]]
+	then 
+		echo "$(($a + $b)) $(($a - $b)) $(($a * $b)) # "
+	else
+		ost=$(((($a * 100) / $b) % 100))
+		if [[ $ost -eq 0 ]]
+			then
+ 				ost=00
+		fi
+		if [[ $ost -lt 0 ]]
+			then
+  				ost=$(((- 1) * ost))
+		fi
+		c=$((($a)**2))
+		d=$((($b)**2))
+		if [[ $c -lt $d ]]
+			then
+				if [[ $a -lt 0 || $b -lt 0 ]]
+					then
+						if [[ $a -lt 0 && $b -lt 0 ]]
+							then
+								r=$(($a/$b))
+							else
+								r="-$(($a/$b))"
+						fi
+					else
+						r=$(($a/$b))
+				fi
+			else
+				r=$(($a/$b))
+		fi
+		echo "$(( $a + $b )) $(( $a - $b )) $(( $a * $b )) $r.$ost"
+fi
